@@ -1,5 +1,7 @@
 package com.seko0716.es;
 
+import org.elasticsearch.action.ActionRequest;
+import org.elasticsearch.action.ActionResponse;
 import org.elasticsearch.cluster.metadata.IndexNameExpressionResolver;
 import org.elasticsearch.cluster.node.DiscoveryNodes;
 import org.elasticsearch.common.settings.ClusterSettings;
@@ -11,6 +13,7 @@ import org.elasticsearch.plugins.Plugin;
 import org.elasticsearch.rest.RestController;
 import org.elasticsearch.rest.RestHandler;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
@@ -28,5 +31,10 @@ public class PipelinePlugin extends Plugin implements ActionPlugin {
                                              final Supplier<DiscoveryNodes> nodesInCluster) {
 
         return Collections.singletonList(new ExampleCatAction(settings, restController));
+    }
+
+    @Override
+    public List<ActionHandler<? extends ActionRequest, ? extends ActionResponse>> getActions() {
+        return null;
     }
 }
