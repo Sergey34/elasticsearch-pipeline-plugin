@@ -8,6 +8,8 @@ import org.elasticsearch.rest.RestController;
 import org.elasticsearch.rest.RestRequest;
 import org.elasticsearch.rest.action.RestToXContentListener;
 
+import static com.seko0716.es.plugin.pipeline.constants.IndexConstants.INDEX;
+import static com.seko0716.es.plugin.pipeline.constants.RestConstants.PATH;
 import static org.elasticsearch.rest.RestRequest.Method.GET;
 
 
@@ -15,7 +17,7 @@ public class RestGetPipelineAction extends BaseRestHandler {
 
     public RestGetPipelineAction(Settings settings, RestController controller) {
         super(settings);
-        controller.registerHandler(GET, "/_action/", this);
+        controller.registerHandler(GET, PATH, this);
     }
 
     @Override
@@ -25,7 +27,7 @@ public class RestGetPipelineAction extends BaseRestHandler {
 
     @Override
     public RestChannelConsumer prepareRequest(final RestRequest request, final NodeClient client) {
-        SearchRequest pipelineSearchAllRequest = new SearchRequest(".pipeline");
+        SearchRequest pipelineSearchAllRequest = new SearchRequest(INDEX);
         return channel -> client.search(pipelineSearchAllRequest, new RestToXContentListener<>(channel));
     }
 }

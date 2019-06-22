@@ -14,13 +14,15 @@ import java.util.Map;
 
 import static com.seko0716.es.plugin.pipeline.constants.IndexConstants.INDEX;
 import static com.seko0716.es.plugin.pipeline.constants.IndexConstants.TYPE;
+import static com.seko0716.es.plugin.pipeline.constants.RestConstants.PARAMS_PIPELINE_ID;
+import static com.seko0716.es.plugin.pipeline.constants.RestConstants.PATH_WITH_ID;
 import static org.elasticsearch.rest.RestRequest.Method.POST;
 
 public class RestPostPipelineAction extends BaseRestHandler {
 
     public RestPostPipelineAction(Settings settings, RestController controller) {
         super(settings);
-        controller.registerHandler(POST, "/_pipelines/{pipeline_id}", this);
+        controller.registerHandler(POST, PATH_WITH_ID, this);
     }
 
     @Override
@@ -30,7 +32,7 @@ public class RestPostPipelineAction extends BaseRestHandler {
 
     @Override
     public RestChannelConsumer prepareRequest(final RestRequest request, final NodeClient client) throws IOException {
-        String pipelineId = request.param("pipeline_id");
+        String pipelineId = request.param(PARAMS_PIPELINE_ID);
 
         try (XContentParser xContentParser = request.contentParser()) {
             Map<String, Object> pipelineBody = xContentParser.mapOrdered();
