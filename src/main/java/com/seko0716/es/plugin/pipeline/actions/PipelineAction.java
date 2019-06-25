@@ -6,7 +6,10 @@ import org.elasticsearch.common.Nullable;
 import java.util.List;
 import java.util.Map;
 
+import static com.seko0716.es.plugin.pipeline.constants.FieldConstants.*;
+
 public abstract class PipelineAction implements Action, Comparable<PipelineAction> {
+
     protected final Map<String, Object> context;
     protected final Map<String, Object> config;
 
@@ -30,8 +33,8 @@ public abstract class PipelineAction implements Action, Comparable<PipelineActio
     }
 
     protected boolean isFiltered(Map<String, Object> event) {
-        List<String> relatedFilters = MapUtils.getListOrDefault(config, "relatedFilters", String.class);
-        return MapUtils.getMapOrEmpty(event, "@metadata").entrySet()
+        List<String> relatedFilters = MapUtils.getListOrDefault(config, RELATED_FILTERS, String.class);
+        return MapUtils.getMapOrEmpty(event, METADATA).entrySet()
                 .stream()
                 .anyMatch(it -> relatedFilters.contains(it.getKey()) && MapUtils.getBoolean(it.getValue()));
     }
@@ -43,7 +46,7 @@ public abstract class PipelineAction implements Action, Comparable<PipelineActio
                                                  @Nullable Throwable err);
 
     public Long getOrder() {
-        return (Long) config.get("order");
+        return (Long) config.get(ORDER);
     }
 
     @Override
