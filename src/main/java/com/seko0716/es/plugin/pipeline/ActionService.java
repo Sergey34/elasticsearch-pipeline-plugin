@@ -1,9 +1,14 @@
-package com.seko0716.es.plugin.pipeline.actions;
+package com.seko0716.es.plugin.pipeline;
 
+import com.seko0716.es.plugin.pipeline.actions.Pipeline;
+import com.seko0716.es.plugin.pipeline.actions.filter.RandomFilterErr;
 import com.seko0716.es.plugin.pipeline.actions.finish.ConsoleFinish;
 import com.seko0716.es.plugin.pipeline.actions.finish.Finish;
 import com.seko0716.es.plugin.pipeline.actions.input.DemoInput;
 import com.seko0716.es.plugin.pipeline.actions.input.Input;
+import com.seko0716.es.plugin.pipeline.actions.output.ConsoleOutput;
+import com.seko0716.es.plugin.pipeline.actions.output.ErrorConsoleOutput;
+import com.seko0716.es.plugin.pipeline.utils.MapUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,6 +24,10 @@ public class ActionService {
         Map<String, Object> value = new HashMap<>();
         value.put("count", 10L);
         CONFIG.put(DemoInput.class.getSimpleName(), value);
+        CONFIG.put(ConsoleOutput.class.getSimpleName(), MapUtils.getMap("relatedFilters", Arrays.asList("RandomFilterErr_id")));
+        CONFIG.put(ErrorConsoleOutput.class.getSimpleName(), new HashMap<>());
+        CONFIG.put(RandomFilterErr.class.getSimpleName(), MapUtils.getMap("id", "RandomFilterErr_id"));
+
     }
 
     private Consumer<Map<String, Object>> pipeline = new Pipeline(CONTEXT, CONFIG);
