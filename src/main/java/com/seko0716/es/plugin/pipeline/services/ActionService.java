@@ -19,6 +19,9 @@ public class ActionService {
     public ActionService(Client client, ScheduleService scheduleService) {
         this.client = client;
         this.scheduleService = scheduleService;
+        // TODO: 28.06.19 load pipelines for this node
+        // TODO: 28.06.19 registry pipelines
+        // TODO: 28.06.19 add listener (dead nodes or add pipeline) and reload pipelines
     }
 
     public void tryExecutePipeline(String pipelineId) {
