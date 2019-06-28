@@ -2,7 +2,9 @@ package com.seko0716.es.plugin.pipeline.services;
 
 import com.seko0716.es.plugin.pipeline.exception.QuartzInterruptException;
 import com.seko0716.es.plugin.pipeline.exception.QuartzSchedulerException;
+import org.elasticsearch.client.Client;
 import org.elasticsearch.common.component.AbstractLifecycleComponent;
+import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.settings.Settings;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
