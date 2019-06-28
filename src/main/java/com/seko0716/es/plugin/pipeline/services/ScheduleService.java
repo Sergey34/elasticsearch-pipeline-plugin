@@ -2,9 +2,7 @@ package com.seko0716.es.plugin.pipeline.services;
 
 import com.seko0716.es.plugin.pipeline.exception.QuartzInterruptException;
 import com.seko0716.es.plugin.pipeline.exception.QuartzSchedulerException;
-import org.elasticsearch.client.Client;
 import org.elasticsearch.common.component.AbstractLifecycleComponent;
-import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.settings.Settings;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
@@ -184,6 +182,14 @@ public class ScheduleService extends AbstractLifecycleComponent {
     public Date rescheduleJob(final TriggerKey triggerKey, final Trigger newTrigger) {
         try {
             return scheduler.rescheduleJob(triggerKey, newTrigger);
+        } catch (final SchedulerException e) {
+            throw new QuartzSchedulerException(e);
+        }
+    }
+
+    public void addOrReplaceJob(final JobDetail jobDetail) {
+        try {
+            scheduler.addJob(jobDetail, true);
         } catch (final SchedulerException e) {
             throw new QuartzSchedulerException(e);
         }

@@ -6,4 +6,5 @@ public final class IndexConstants {
 
     public static final String INDEX = ".pipelines";
     public static final String TYPE = "doc";
+    public static final Integer SIZE = 500;
 }
