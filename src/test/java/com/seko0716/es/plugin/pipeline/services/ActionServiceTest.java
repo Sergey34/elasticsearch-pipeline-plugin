@@ -9,7 +9,7 @@ import com.seko0716.es.plugin.pipeline.actions.input.Input;
 import com.seko0716.es.plugin.pipeline.actions.output.ConsoleOutput;
 import com.seko0716.es.plugin.pipeline.actions.output.ErrorConsoleOutput;
 import com.seko0716.es.plugin.pipeline.utils.MapUtils;
-import org.junit.Test;
+//import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,10 +18,10 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public class ActionServiceTest {
-    private final ActionService actionService = new ActionService(null);
+    private final ActionService actionService = new ActionService(null, null);
 
-    @Test
-    public void test() {
+//    @Test
+    public void testFooBar() {
         final HashMap<String, Object> CONTEXT = new HashMap<>();
         final HashMap<String, Object> CONFIG = new HashMap<>();
 
@@ -42,6 +42,6 @@ public class ActionServiceTest {
     }
 
     public static void main(String[] args) {
-        new ActionServiceTest().test();
+        new ActionServiceTest().testFooBar();
     }
 }

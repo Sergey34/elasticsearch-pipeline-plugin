@@ -6,10 +6,11 @@ import org.elasticsearch.common.Nullable;
 import java.util.List;
 import java.util.Map;
 
-import static com.seko0716.es.plugin.pipeline.constants.FieldConstants.*;
+import static com.seko0716.es.plugin.pipeline.constants.FieldConstants.METADATA;
+import static com.seko0716.es.plugin.pipeline.constants.FieldConstants.ORDER;
+import static com.seko0716.es.plugin.pipeline.constants.FieldConstants.RELATED_FILTERS;
 
 public abstract class PipelineAction implements Action, Comparable<PipelineAction> {
-
     protected final Map<String, Object> context;
     protected final Map<String, Object> config;
 
@@ -39,9 +40,9 @@ public abstract class PipelineAction implements Action, Comparable<PipelineActio
                 .anyMatch(it -> relatedFilters.contains(it.getKey()) && MapUtils.getBoolean(it.getValue()));
     }
 
-    abstract protected Map<String, Object> action(Map<String, Object> event);
+    protected abstract Map<String, Object> action(Map<String, Object> event);
 
-    abstract protected void writeActionStatistic(Map<String, Object> event,
+     protected abstract void writeActionStatistic(Map<String, Object> event,
                                                  @Nullable Map<String, Object> actionResult,
                                                  @Nullable Throwable err);
 

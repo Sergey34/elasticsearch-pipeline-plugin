@@ -5,8 +5,6 @@ import org.quartz.SchedulerException;
 
 public class QuartzSchedulerException extends ElasticsearchException {
 
-    private static final long serialVersionUID = 1L;
-
     public QuartzSchedulerException(final String msg, final Throwable cause) {
         super(msg, cause);
     }

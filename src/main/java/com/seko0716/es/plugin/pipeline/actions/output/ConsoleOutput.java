@@ -2,20 +2,25 @@ package com.seko0716.es.plugin.pipeline.actions.output;
 
 import com.seko0716.es.plugin.pipeline.actions.PipelineAction;
 import com.seko0716.es.plugin.pipeline.utils.MapUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 import java.util.Map;
 
 public class ConsoleOutput extends PipelineAction {
 
+    private final Logger logger;
+
     public ConsoleOutput(Map<String, Object> context, Map<String, Object> config) {
         super(context, config);
+        this.logger = LogManager.getLogger(getClass());
     }
 
 
     @Override
     protected Map<String, Object> action(Map<String, Object> event) {
-        System.out.println(event);
+        logger.info("event {}", event);
         return Collections.emptyMap();
     }
 
