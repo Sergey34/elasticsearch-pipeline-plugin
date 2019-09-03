@@ -54,6 +54,9 @@ dependencies {
   compile 'org.elasticsearch:elasticsearch:6.5.2'
   compile 'com.o19s:RankyMcRankFace:0.1.1'
   compile "com.github.spullara.mustache.java:compiler:0.9.3"
+  // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+  compile "org.slf4j:slf4j-api:1.7.28"
+
 
   // https://mvnrepository.com/artifact/org.quartz-scheduler/quartz
   compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.1'
@@ -73,7 +76,10 @@ dependencyLicenses {
 checkstyleMain.enabled = true
 checkstyleTest.enabled = true
 test.enabled = false
-integTestRunner.enabled = false
+
+integTestRunner {
+  systemProperty 'tests.security.manager', 'false'
+}
 
 // FIXME dependency license check needs to be enabled
 dependencyLicenses.enabled = false

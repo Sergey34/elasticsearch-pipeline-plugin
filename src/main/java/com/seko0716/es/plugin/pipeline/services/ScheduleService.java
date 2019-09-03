@@ -2,6 +2,7 @@ package com.seko0716.es.plugin.pipeline.services;
 
 import com.seko0716.es.plugin.pipeline.exception.QuartzInterruptException;
 import com.seko0716.es.plugin.pipeline.exception.QuartzSchedulerException;
+import org.elasticsearch.SpecialPermission;
 import org.elasticsearch.common.component.AbstractLifecycleComponent;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.settings.Settings;
@@ -23,9 +24,12 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.matchers.GroupMatcher;
 
 import java.io.IOException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 public class ScheduleService extends AbstractLifecycleComponent {
@@ -38,12 +42,25 @@ public class ScheduleService extends AbstractLifecycleComponent {
         super(settings);
         logger.info("Creating Scheduler...");
 
-        final SchedulerFactory sf = new StdSchedulerFactory();
-        try {
-            scheduler = sf.getScheduler();
-        } catch (final SchedulerException e) {
-            throw new QuartzSchedulerException("Failed to create Scheduler.", e);
+        SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            // unprivileged code such as scripts do not have SpecialPermission
+            sm.checkPermission(new SpecialPermission());
         }
+        scheduler = AccessController.doPrivileged((PrivilegedAction<Scheduler>) () -> {
+            try {
+                Properties properties = new Properties();
+                properties.put("org.quartz.threadPool.class", "org.quartz.simpl.SimpleThreadPool");
+                properties.put("org.quartz.threadPool.threadCount", "10");
+                properties.put("org.quartz.threadPool.threadPriority", "5");
+                properties.put("org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread", "true");
+                final SchedulerFactory sf = new StdSchedulerFactory(properties);// TODO: 03.09.2019 rewrite to configuration file
+                return sf.getScheduler();
+            } catch (final SchedulerException e) {
+                throw new QuartzSchedulerException("Failed to create Scheduler.", e);
+            }
+
+        });
     }
 
     @Override
