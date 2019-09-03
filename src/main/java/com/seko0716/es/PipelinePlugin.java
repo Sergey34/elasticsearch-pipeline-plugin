@@ -1,4 +1,4 @@
-package com.seko0716.es.plugin.pipeline;
+package com.seko0716.es;
 
 import com.seko0716.es.plugin.pipeline.module.ScheduleModule;
 import com.seko0716.es.plugin.pipeline.rest.RestDeletePipelineAction;
