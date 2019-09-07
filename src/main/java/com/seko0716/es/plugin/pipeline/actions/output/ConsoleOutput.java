@@ -9,13 +9,7 @@ import java.util.Collections;
 import java.util.Map;
 
 public class ConsoleOutput extends PipelineAction {
-
-    private final Logger logger;
-
-    public ConsoleOutput(Map<String, Object> context, Map<String, Object> config) {
-        super(context, config);
-        this.logger = LogManager.getLogger(getClass());
-    }
+    private final Logger logger =  LogManager.getLogger(getClass());
 
 
     @Override
@@ -30,5 +24,10 @@ public class ConsoleOutput extends PipelineAction {
         Long count = (Long) stats.getOrDefault("count", 0L);
         stats.put("count", ++count);
         context.put(getActionName(),stats);
+    }
+
+    @Override
+    public String getGroup() {
+        return "output";
     }
 }

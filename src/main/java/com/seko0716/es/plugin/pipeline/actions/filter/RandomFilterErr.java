@@ -11,10 +11,6 @@ public class RandomFilterErr extends PipelineAction {
 
     public static final Random RANDOM = Randomness.get();
 
-    public RandomFilterErr(Map<String, Object> context, Map<String, Object> config) {
-        super(context, config);
-    }
-
     @Override
     protected Map<String, Object> action(Map<String, Object> event) {
         boolean isFiltered = RANDOM.nextBoolean();
@@ -27,5 +23,10 @@ public class RandomFilterErr extends PipelineAction {
     @Override
     protected void writeActionStatistic(Map<String, Object> event, Map<String, Object> actionResult, Throwable err) {
 
+    }
+
+    @Override
+    public String getGroup() {
+        return "filter";
     }
 }

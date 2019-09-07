@@ -56,6 +56,7 @@ dependencies {
   compile "com.github.spullara.mustache.java:compiler:0.9.3"
   // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
   compile "org.slf4j:slf4j-api:1.7.28"
+  compile "org.reflections:reflections:0.9.11"
 
 
   // https://mvnrepository.com/artifact/org.quartz-scheduler/quartz

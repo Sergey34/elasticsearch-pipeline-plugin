@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
-public class ConsoleFinish implements Finish {
+public class ConsoleFinish extends FinishAction implements Finish {
     private final Map<String, Object> context;
     private final Map<String, Object> config;
     private final Logger logger;
@@ -17,7 +17,14 @@ public class ConsoleFinish implements Finish {
     }
 
     @Override
-    public void perform() {
+    public Map<String, Object> action() {
         logger.info("context {}", context);
+        return null;
     }
+
+    @Override
+    protected void writeActionStatistic(Map<String, Object> event, Map<String, Object> actionResult, Throwable err) {
+
+    }
+
 }

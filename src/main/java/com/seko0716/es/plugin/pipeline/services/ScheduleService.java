@@ -31,10 +31,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.UUID;
+
+import static org.quartz.impl.StdSchedulerFactory.PROP_SCHED_INSTANCE_NAME;
 
 public class ScheduleService extends AbstractLifecycleComponent {
-    private Scheduler scheduler;
-
+    private final Scheduler scheduler;
+    private final String schedulerName;
     private boolean isPause = false;
 
     @Inject
@@ -53,15 +56,21 @@ public class ScheduleService extends AbstractLifecycleComponent {
                 properties.put("org.quartz.threadPool.class", "org.quartz.simpl.SimpleThreadPool");
                 properties.put("org.quartz.threadPool.threadCount", "10");
                 properties.put("org.quartz.threadPool.threadPriority", "5");
+                properties.put(PROP_SCHED_INSTANCE_NAME, UUID.randomUUID().toString());
                 properties.put("org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread", "true");
                 final SchedulerFactory sf = new StdSchedulerFactory(properties);// TODO: 03.09.2019 rewrite to configuration file
                 return sf.getScheduler();
             } catch (final SchedulerException e) {
                 throw new QuartzSchedulerException("Failed to create Scheduler.", e);
             }
-
         });
+        try {
+            schedulerName = scheduler.getSchedulerName();
+        } catch (SchedulerException e) {
+            throw new QuartzSchedulerException("Failed to set scheduler name.", e);
+        }
     }
+
 
     @Override
     protected void doStart() {

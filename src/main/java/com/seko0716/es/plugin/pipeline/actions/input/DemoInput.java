@@ -1,19 +1,16 @@
 package com.seko0716.es.plugin.pipeline.actions.input;
 
+import org.elasticsearch.client.Client;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class DemoInput implements Input {
-    private final Map<String, Object> context;
-    private final Map<String, Object> config;
-
-    @SuppressWarnings("unchecked")
-    public DemoInput(Map<String, Object> context, Map<String, Object> config) {
-        this.context = context;
-        this.config = (Map<String, Object>) config.get(getActionName());
-    }
+    private Map<String, Object> context;
+    private Map<String, Object> config;
+    private Client client;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -41,7 +38,22 @@ public class DemoInput implements Input {
 
         List<Map<String, Object>> result = Arrays.asList(map1, map2, map3, map4, map5, map6);
         stats.put("count", contextCount + result.size());
-        context.put(getActionName(),stats);
+        context.put(getActionName(), stats);
         return result;
+    }
+
+    @Override
+    public void setConfiguration(Map<String, Object> configuration) {
+        this.config = configuration;
+    }
+
+    @Override
+    public void setContext(Map<String, Object> context) {
+        this.context = context;
+    }
+
+    @Override
+    public void setClient(Client client) {
+        this.client=client;
     }
 }

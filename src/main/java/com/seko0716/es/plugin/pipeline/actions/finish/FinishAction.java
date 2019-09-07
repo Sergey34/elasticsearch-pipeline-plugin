@@ -1,5 +1,6 @@
-package com.seko0716.es.plugin.pipeline.actions;
+package com.seko0716.es.plugin.pipeline.actions.finish;
 
+import com.seko0716.es.plugin.pipeline.actions.PipelineAction;
 import com.seko0716.es.plugin.pipeline.utils.MapUtils;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.Nullable;
@@ -11,22 +12,17 @@ import static com.seko0716.es.plugin.pipeline.constants.FieldConstants.METADATA;
 import static com.seko0716.es.plugin.pipeline.constants.FieldConstants.ORDER;
 import static com.seko0716.es.plugin.pipeline.constants.FieldConstants.RELATED_FILTERS;
 
-public abstract class PipelineAction implements Action, Comparable<PipelineAction> {
+public abstract class FinishAction implements Finish, Comparable<PipelineAction> {
     protected Map<String, Object> context;
     protected Map<String, Object> config;
     private Client client;
 
-
-    protected void perform(Map<String, Object> event) {
-        if (isFiltered(event)) {
-            return;
-        }
-
+    public void perform() {
         try {
-            Map<String, Object> actionResult = action(event);
-            writeActionStatistic(event, actionResult, null);
+            Map<String, Object> actionResult = action();
+            writeActionStatistic(null, actionResult, null);
         } catch (Exception e) {
-            writeActionStatistic(event, null, e);
+            writeActionStatistic(null, null, e);
         }
     }
 
@@ -36,8 +32,6 @@ public abstract class PipelineAction implements Action, Comparable<PipelineActio
                 .stream()
                 .anyMatch(it -> relatedFilters.contains(it.getKey()) && MapUtils.getBoolean(it.getValue()));
     }
-
-    protected abstract Map<String, Object> action(Map<String, Object> event);
 
     protected abstract void writeActionStatistic(Map<String, Object> event,
                                                  @Nullable Map<String, Object> actionResult,
@@ -52,7 +46,9 @@ public abstract class PipelineAction implements Action, Comparable<PipelineActio
         return this.getOrder().compareTo(o.getOrder());
     }
 
-    public abstract String getGroup();
+    public String getGroup() {
+        return "finish";
+    }
 
     public void setConfiguration(Map<String, Object> configuration) {
         this.config = configuration;
