@@ -15,13 +15,7 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.slice.SliceBuilder;
-import org.quartz.CronScheduleBuilder;
-import org.quartz.CronTrigger;
-import org.quartz.JobBuilder;
-import org.quartz.JobDataMap;
-import org.quartz.JobDetail;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
+import org.quartz.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,10 +34,11 @@ public class PipelineLifecycle extends AbstractLifecycleComponent implements Clu
     private final ScheduleService scheduleService;
     private final Client client;
 
-    private static final Function<Map<String, Object>, CronTrigger> mapMapTriggerToTrigger = trigger -> TriggerBuilder
+    private static final Function<Map<String, Object>, CronTrigger> mapTriggerConfigToTrigger = trigger -> TriggerBuilder
             .newTrigger()
             .withIdentity(trigger.get("title").toString(), trigger.get("group").toString())
             .withSchedule(CronScheduleBuilder.cronSchedule(trigger.get("cron").toString()))
+            .withDescription(trigger.get("description").toString())
             .build();
 
     @Override
@@ -69,7 +64,6 @@ public class PipelineLifecycle extends AbstractLifecycleComponent implements Clu
         super(settings);
         this.client = client;
         this.scheduleService = scheduleService;
-
     }
 
     @Override
@@ -106,7 +100,7 @@ public class PipelineLifecycle extends AbstractLifecycleComponent implements Clu
         Map<String, Object> configuration = MapUtils.getMap("configuration", pipeline);
         JobDataMap jobDataMap = new JobDataMap(configuration);
         jobDataMap.put("configuration", configuration);
-        jobDataMap.put("SchedulerName", scheduleService.getSchedulerName());
+        jobDataMap.put("scheduler_name", scheduleService.getSchedulerName());
         return JobBuilder.newJob(PipelineJob.class)
                 .withIdentity(pipeline.get("title").toString(), pipeline.get("group").toString())
                 .withDescription(pipeline.get("description").toString())
@@ -118,9 +112,8 @@ public class PipelineLifecycle extends AbstractLifecycleComponent implements Clu
     private Set<? extends Trigger> pipeline2Triggers(Map<String, Object> pipeline) {
         List<Map<String, Object>> triggers = MapUtils.getListOfMap(pipeline, "triggers");
         return triggers.stream()
-                .map(mapMapTriggerToTrigger)
+                .map(mapTriggerConfigToTrigger)
                 .collect(Collectors.toSet());
-
     }
 
     @Override

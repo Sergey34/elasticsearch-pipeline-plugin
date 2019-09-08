@@ -26,11 +26,11 @@ public abstract class AbstractJob implements Job {
         client = ClientFactory.INSTANCE.getEsClient();
         Map<String, Object> mergedJobDataMap = context.getMergedJobDataMap().getWrappedMap();
         Map<String, Object> config = MapUtils.getMap(mergedJobDataMap, "configuration");
-        boolean isSyncJob = MapUtils.getBoolean(config, "sync_job", false);
+        boolean isSyncJob = MapUtils.getBoolean(config, "sync_pipeline", false);
         Trigger trigger = context.getTrigger();
         TriggerKey key = trigger.getKey();
 
-        String schedulerName = MapUtils.getString(mergedJobDataMap,"SchedulerName");
+        String schedulerName = MapUtils.getString(mergedJobDataMap,"scheduler_name");
         Scheduler scheduler = AccessController.doPrivileged((PrivilegedAction<Scheduler>) () -> {
             try {
                 final SchedulerFactory sf = new StdSchedulerFactory();

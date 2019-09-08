@@ -11,4 +11,5 @@ public class ActionServiceTests extends ESTestCase {
         Action action = ActionService.loadAction(aClass, Action.class);
         Assert.assertEquals(aClass, action.getActionName());
     }
+
 }
