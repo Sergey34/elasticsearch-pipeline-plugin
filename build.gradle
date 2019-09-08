@@ -79,7 +79,7 @@ dependencyLicenses {
 // Set to false to not use elasticsearch checkstyle rules
 checkstyleMain.enabled = true
 checkstyleTest.enabled = true
-test.enabled = false
+test.enabled = true
 
 // FIXME dependency license check needs to be enabled
 dependencyLicenses.enabled = false
