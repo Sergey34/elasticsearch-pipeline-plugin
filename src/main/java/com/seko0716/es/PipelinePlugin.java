@@ -37,7 +37,6 @@ import java.util.function.Supplier;
 
 public class PipelinePlugin extends Plugin implements ActionPlugin {
 
-
     @Override
     public Collection<Class<? extends LifecycleComponent>> getGuiceServiceClasses() {
         return Arrays.asList(ScheduleService.class);
