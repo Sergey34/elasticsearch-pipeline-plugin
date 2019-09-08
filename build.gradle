@@ -1,13 +1,13 @@
 buildscript {
-  repositories {
-    mavenCentral()
-    jcenter()
-    mavenLocal()
-  }
+    repositories {
+        mavenCentral()
+        jcenter()
+        mavenLocal()
+    }
 
-  dependencies {
-    classpath "org.elasticsearch.gradle:build-tools:6.5.2"
-  }
+    dependencies {
+        classpath "org.elasticsearch.gradle:build-tools:6.5.2"
+    }
 }
 
 group = 'com.seko0716.es'
@@ -26,13 +26,13 @@ licenseFile = rootProject.file('LICENSE.txt')
 noticeFile = rootProject.file('NOTICE.txt')
 
 esplugin {
-  name 'pipeline'
-  description 'pipeline action executing'
-  classname 'com.seko0716.es.PipelinePlugin'
-  // license of this project
-  licenseFile = rootProject.file('LICENSE.txt')
-  // copyright notices
-  noticeFile = rootProject.file('NOTICE.txt')
+    name 'pipeline'
+    description 'pipeline action executing'
+    classname 'com.seko0716.es.PipelinePlugin'
+    // license of this project
+    licenseFile = rootProject.file('LICENSE.txt')
+    // copyright notices
+    noticeFile = rootProject.file('NOTICE.txt')
 }
 
 
@@ -46,41 +46,40 @@ repositories {
 }
 
 dependencies {
-  compile "org.apache.lucene:lucene-expressions:7.5.0"
-  compile 'org.antlr:antlr4-runtime:4.5.1-1'
-  compile 'org.ow2.asm:asm:5.0.4'
-  compile 'org.ow2.asm:asm-commons:5.0.4'
-  compile 'org.ow2.asm:asm-tree:5.0.4'
-  compile 'org.elasticsearch:elasticsearch:6.5.2'
-  compile 'com.o19s:RankyMcRankFace:0.1.1'
-  compile "com.github.spullara.mustache.java:compiler:0.9.3"
-  // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
-  compile "org.slf4j:slf4j-api:1.7.28"
-  compile "org.reflections:reflections:0.9.11"
+    compile "org.apache.lucene:lucene-expressions:7.5.0"
+    compile 'org.antlr:antlr4-runtime:4.5.1-1'
+    compile 'org.ow2.asm:asm:5.0.4'
+    compile 'org.ow2.asm:asm-commons:5.0.4'
+    compile 'org.ow2.asm:asm-tree:5.0.4'
+    compile 'org.elasticsearch:elasticsearch:6.5.2'
+    compile 'com.o19s:RankyMcRankFace:0.1.1'
+    compile "com.github.spullara.mustache.java:compiler:0.9.3"
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+    compile "org.slf4j:slf4j-api:1.7.28"
+    compile "org.reflections:reflections:0.9.11"
+// https://mvnrepository.com/artifact/com.google.guava/guava
+    compile group: 'com.google.guava', name: 'guava', version: '23.0'
 
 
-  // https://mvnrepository.com/artifact/org.quartz-scheduler/quartz
-  compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.1'
+    // https://mvnrepository.com/artifact/org.quartz-scheduler/quartz
+    compile group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.1'
 
+    compile group: 'org.clapper', name: 'javautil', version: '3.2.0'
 
-  testCompile 'org.elasticsearch.test:framework:6.5.2'
+    testCompile 'org.elasticsearch.test:framework:6.5.2'
 }
 
 dependencyLicenses {
-  mapping from: /lucene-.*/, to: 'lucene'
-  mapping from: /asm-.*/, to: 'asm'
-  mapping from: /Ranky-.*/, to: 'lucene'
-  mapping from: /compiler-.*/, to: 'lucene'
+    mapping from: /lucene-.*/, to: 'lucene'
+    mapping from: /asm-.*/, to: 'asm'
+    mapping from: /Ranky-.*/, to: 'lucene'
+    mapping from: /compiler-.*/, to: 'lucene'
 }
 
 // Set to false to not use elasticsearch checkstyle rules
 checkstyleMain.enabled = true
 checkstyleTest.enabled = true
 test.enabled = false
-
-integTestRunner {
-  systemProperty 'tests.security.manager', 'false'
-}
 
 // FIXME dependency license check needs to be enabled
 dependencyLicenses.enabled = false

@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface Action {
     default String getActionName() {
-        return getClass().getSimpleName();
+        return getClass().getName();
     }
 
     void setConfiguration(Map<String, Object> configuration);

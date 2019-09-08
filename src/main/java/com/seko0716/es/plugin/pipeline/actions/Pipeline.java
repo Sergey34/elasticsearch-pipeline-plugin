@@ -1,36 +1,24 @@
 package com.seko0716.es.plugin.pipeline.actions;
 
 import com.seko0716.es.plugin.pipeline.services.ActionService;
+import com.seko0716.es.plugin.pipeline.services.ClientFactory;
 import com.seko0716.es.plugin.pipeline.utils.MapUtils;
 import org.elasticsearch.client.Client;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class Pipeline implements Consumer<Map<String, Object>> {
-    private static final List<Action> loadActions;
     private List<PipelineAction> actions;
     private Client client;
 
-    static {
-        try {
-            loadActions = ActionService.loadActions();
-        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
-            throw new IllegalStateException("can not load actions", e);
-        }
-    }
-
     public Pipeline(final Map<String, Object> context, Map<String, Object> config) {
-        List<String> classes = config.values().stream()
-                .flatMap(it ->  MapUtils.generifyListOfMap(it).stream())
+        this.actions = config.values().stream()
+                .flatMap(it -> MapUtils.generifyListOfMap(it).stream())
                 .map(it -> MapUtils.getString(it, "class"))
-                .collect(Collectors.toList());
-
-        this.actions = loadActions.stream()
-                .filter(it -> classes.contains(it.getActionName()))
+                .map(aClass -> ActionService.loadAction(aClass, Action.class))
                 .map(it -> (PipelineAction) it)
                 .sorted()
                 .peek(it -> {
@@ -45,6 +33,7 @@ public class Pipeline implements Consumer<Map<String, Object>> {
                     it.setClient(client);
                 })
                 .collect(Collectors.toList());
+        this.client = ClientFactory.INSTANCE.getEsClient();
     }
 
     @Override

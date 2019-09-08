@@ -6,7 +6,6 @@ import com.seko0716.es.plugin.pipeline.actions.input.Input;
 import com.seko0716.es.plugin.pipeline.services.ActionService;
 import com.seko0716.es.plugin.pipeline.utils.MapUtils;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,11 +20,8 @@ public class PipelineJob extends AbstractJob {
         final Map<String, Object> pipelineActionsConfig = new HashMap<>();
         List<Map<String, Object>> filterActions = MapUtils.getListOfMap(config, "filter_actions");
         List<Map<String, Object>> outputActions = MapUtils.getListOfMap(config, "output_actions");
-        List<Map<String, Object>>joinActions = MapUtils.getListOfMap(config, "join_actions");
+        List<Map<String, Object>> joinActions = MapUtils.getListOfMap(config, "join_actions");
         List<Map<String, Object>> finalActions = MapUtils.getListOfMap(config, "final_actions");
-        List<String> finalActionNames = finalActions.stream()
-                .map(it -> it.get("class").toString())
-                .collect(Collectors.toList());
 
         pipelineActionsConfig.put("filters", filterActions);
         pipelineActionsConfig.put("outputs", outputActions);
@@ -36,35 +32,22 @@ public class PipelineJob extends AbstractJob {
 
         Consumer<Map<String, Object>> pipeline = new Pipeline(context, pipelineActionsConfig);
 
-        Input input;
-        List<FinishAction> finish;
-        try {
-            input = ActionService.loadInputActions().stream()
-                    .filter(it -> it.getActionName().equals(MapUtils.getString(inputConfig, "class")))
-                    .peek(it -> {
-                        it.setConfiguration(inputConfig);
-                        it.setContext(context);
-                        it.setClient(client);
-                    })
-                    .findAny()
-                    .orElseThrow(() -> new IllegalStateException("can not configure input action"));
+        Input input = ActionService.loadAction(MapUtils.getString(inputConfig, "class"), Input.class);
+        input.setConfiguration(inputConfig);
+        input.setContext(context);
+        input.setClient(client);
 
-
-            finish = ActionService.loadFinishActions().stream()
-                    .filter(it -> finalActionNames.contains(it.getActionName()))
-                    .map(it -> (FinishAction) it)
-                    .sorted()
-                    .peek(it -> {
-                        it.setConfiguration(inputConfig);
-                        it.setContext(context);
-                        it.setClient(client);
-                    })
-                    .collect(Collectors.toList());
-        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
-            throw new IllegalStateException("can not load input or finish action", e);
-        }
+        List<FinishAction> finish = finalActions.stream()
+                .map(it -> it.get("class").toString())
+                .map(it -> ActionService.loadAction(it, FinishAction.class))
+                .sorted()
+                .peek(it -> {
+                    it.setConfiguration(inputConfig);
+                    it.setContext(context);
+                    it.setClient(client);
+                })
+                .collect(Collectors.toList());
         ActionService actionService = new ActionService();
-
         actionService.executePipeline(input, pipeline, finish);
     }
 }

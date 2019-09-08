@@ -8,4 +8,7 @@ import java.util.Map;
 
 public interface Input extends Supplier<List<Map<String, Object>>> , Action {
 
+    default String getGroup(){
+        return "input";
+    }
 }
