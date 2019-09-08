@@ -38,6 +38,10 @@ Plugin to stream data from the es index (input), apply the action (filter, join,
       {
         "class": "com.seko0716.es.plugin.pipeline.actions.filter.RandomFilterErr",
         "order": 1
+      },
+      {
+        "class": "com.seko0716.es.plugin.pipeline.actions.filter.RandomFilterErr",
+        "order": 3
       }
     ],
     "join_actions": [
@@ -49,7 +53,7 @@ Plugin to stream data from the es index (input), apply the action (filter, join,
       },
       {
         "class": "com.seko0716.es.plugin.pipeline.actions.output.ErrorConsoleOutput",
-        "order": 1
+        "order": 4
       }
     ],
     "final_actions": [
